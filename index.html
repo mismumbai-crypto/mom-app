@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MOM Scorecard</title>
+<meta name="theme-color" content="#0b2a5b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MOM Scorecard">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+  /* Opened from the home-screen icon: go straight to the scorecard website. */
+  var TARGET = 'https://leaderboardmom1.wordpress.com/?preview_version=mom3';
+  var fromApp = /[?&]source=app\b/.test(location.search) ||
+    (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  if (fromApp) location.replace(TARGET);
+</script>
+<style>
+  :root{--navy:#0b2a5b;--navy2:#123a7a;--red:#e2312d;--ink:#16213a;--mute:#6b7690;--bg:#f3f5fa;--line:#e6e9f2}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .top{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:36px 16px 88px;text-align:center}
+  .top img{width:84px;height:84px;border-radius:20px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  .top h1{font-size:22px;margin:14px 0 2px}
+  .top div{font-size:13px;opacity:.85}
+  .card{background:#fff;border-radius:18px;box-shadow:0 8px 24px rgba(11,42,91,.12);
+        max-width:440px;margin:-60px auto 16px;padding:22px 18px;width:calc(100% - 32px)}
+  .card + .card{margin-top:0}
+  .btn{display:block;width:100%;border:0;font:inherit;font-weight:700;font-size:17px;padding:15px;border-radius:14px;
+       text-align:center;text-decoration:none;cursor:pointer}
+  .primary{background:var(--navy);color:#fff}
+  .ghost{background:#eef2fb;color:var(--navy);margin-top:10px}
+  .btn:active{transform:scale(.98)}
+  .hide{display:none!important}
+  .done{background:#e8f6ef;color:#14935a;border-radius:12px;padding:12px;font-size:14px;font-weight:600;text-align:center}
+  h2{font-size:15px;margin:0 0 10px;color:var(--navy)}
+  ol{margin:0;padding-left:20px;font-size:14px;line-height:1.7}
+  .note{font-size:12px;color:var(--mute);margin-top:10px;line-height:1.5}
+  .feat{list-style:none;margin:0;padding:0;font-size:14px}
+  .feat li{padding:9px 0;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
+  .feat li:first-child{border-top:0}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex:0 0 8px}
+  .foot{text-align:center;font-size:12px;color:var(--mute);margin:8px 16px 28px}
+</style>
+</head>
+<body>
+  <div class="top">
+    <img src="icon-192.png" alt="MOM">
+    <h1>MOM Incentive Scorecard</h1>
+    <div>Meal of the Moment</div>
+  </div>
+
+  <!-- Install -->
+  <div class="card">
+    <button id="installBtn" class="btn primary hide">Install App on Phone</button>
+    <div id="installed" class="done hide">App installed. Open it from the MOM Scorecard icon on your phone.</div>
+
+    <div id="iosHelp" class="hide">
+      <h2>Add to Home Screen (iPhone)</h2>
+      <ol>
+        <li>Open this page in <b>Safari</b>.</li>
+        <li>Tap the <b>Share</b> button (square with arrow).</li>
+        <li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
+      </ol>
+    </div>
+
+    <div id="manualHelp" class="hide">
+      <h2>Add to Home Screen</h2>
+      <ol>
+        <li>Open this page in <b>Chrome</b>.</li>
+        <li>Tap the <b>&#8942;</b> menu (top right).</li>
+        <li>Tap <b>Install app</b> or <b>Add to Home screen</b>, then <b>Install</b>.</li>
+      </ol>
+    </div>
+
+    <a id="openBtn" class="btn ghost" href="https://leaderboardmom1.wordpress.com/?preview_version=mom3">Open Scorecard Now</a>
+    <div class="note">Icon not showing on the home screen? Check the app drawer, or go to Settings &rarr; Apps &rarr; Chrome &rarr; allow <b>Home screen shortcuts</b>.</div>
+  </div>
+
+  <div class="card">
+    <ul class="feat">
+      <li><span class="dot"></span>My Scorecard &amp; Ranking</li>
+      <li><span class="dot"></span>Sales Programs</li>
+      <li><span class="dot"></span>Brochures</li>
+    </ul>
+  </div>
+
+  <div class="foot">Login with your registered mobile number &amp; OTP.</div>
+
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  var deferred = null;
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+
+  if (isIOS) $('iosHelp').classList.remove('hide');
+
+  /* Android/Chrome: show the one-tap Install button when the browser allows it. */
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    $('installBtn').classList.remove('hide');
+    $('manualHelp').classList.add('hide');
+  });
+
+  $('installBtn').addEventListener('click', function () {
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.then(function (r) {
+      if (r.outcome === 'accepted') { $('installBtn').classList.add('hide'); $('installed').classList.remove('hide'); }
+      deferred = null;
+    });
+  });
+
+  window.addEventListener('appinstalled', function () {
+    $('installBtn').classList.add('hide'); $('manualHelp').classList.add('hide'); $('installed').classList.remove('hide');
+  });
+
+  /* No install prompt after a moment (already installed, other browser, etc.): show manual steps. */
+  setTimeout(function () {
+    if (!deferred && !isIOS && $('installed').classList.contains('hide')) $('manualHelp').classList.remove('hide');
+  }, 2500);
+</script>
+</body>
+</html>
